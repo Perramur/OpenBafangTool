@@ -1,17 +1,22 @@
 import React from 'react';
 import {
     FileOutlined,
-    SettingOutlined,
+    ControlOutlined,
     BookOutlined,
     ArrowLeftOutlined,
+    WarningOutlined,
+    PercentageOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-import BafangUartMotorInfoView from '../panels/BafangUartMotorInfoView';
-import BafangUartMotorSettingsView from '../panels/BafangUartMotorSettingsView';
+import BafangUartMotorInfoView from '../panels/bafang/BafangUartMotorInfoView';
+import BafangUartMotorSettingsView from '../panels/bafang/BafangUartMotorSettingsView';
 import IConnection from '../../device/Connection';
 import BafangUartMotor from '../../device/BafangUartMotor';
-import DocumentationView from '../panels/DocumentationView';
+import DocumentationView from '../panels/common/DocumentationView';
 import { DocPages } from '../../../docs/document_resolver';
+import YamahaSystemBatteryView from '../panels/yamaha/YamahaSystemBatteryView';
+import YamahaSystem from '../../device/YamahaSystem';
+import YamahaSystemMotorDiagnosticsView from '../panels/yamaha/YamahaSystemMotorDiagnosticsView';
 
 const { Sider } = Layout;
 
@@ -32,14 +37,14 @@ const menuItems = {
             label: 'Back',
         },
         {
-            key: 'battery_info',
-            icon: <div />, //<FileOutlined />,
+            key: 'yamaha_system_battery_info',
+            icon: <PercentageOutlined />,
             label: 'Battery info',
         },
         {
-            key: 'motor_diagnostics',
-            icon: <div />, //<SettingOutlined />,
-            label: 'Motor diagnostic',
+            key: 'yamaha_system_motor_diagnostics',
+            icon: <WarningOutlined />,
+            label: 'Motor diagnostics',
         },
         {
             key: 'manual',
@@ -78,7 +83,7 @@ const menuItems = {
         },
         {
             key: 'bafang_motor_settings',
-            icon: <SettingOutlined />,
+            icon: <ControlOutlined />,
             label: 'Parameters',
         },
         // {
@@ -113,7 +118,7 @@ const menuItems = {
     bafang_uart_display: [
         {
             key: '1',
-            icon: <SettingOutlined />,
+            icon: <ControlOutlined />,
             label: 'nav 1',
         },
     ],
@@ -174,7 +179,19 @@ class MainView extends React.Component<MainProps, MainState> {
                             connection={connection as BafangUartMotor}
                         />
                     )}
-                    {tab === 'bafang_motor_diagnostics' && <p>Under construction</p>}
+                    {tab === 'yamaha_system_battery_info' && (
+                        <YamahaSystemBatteryView
+                            connection={connection as YamahaSystem}
+                        />
+                    )}
+                    {tab === 'yamaha_system_motor_diagnostics' && (
+                        <YamahaSystemMotorDiagnosticsView
+                            connection={connection as YamahaSystem}
+                        />
+                    )}
+                    {tab === 'bafang_motor_diagnostics' && (
+                        <p>Under construction</p>
+                    )}
                     {tab.indexOf('manual') === 0 && (
                         <DocumentationView page={tab.substring(7)} />
                     )}
