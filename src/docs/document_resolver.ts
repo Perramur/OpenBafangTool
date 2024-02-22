@@ -8,8 +8,12 @@ import GeneralManual from '../../docs/General manual.md';
 export enum DocPages {
     BafangUartMotorGeneralManualDocument = 'bafang_uart_motor_general_manual',
     BafangUartMotorParamsDocument = 'bafang_uart_motor_parameters',
+    BafangUartMotorAPIDocument = 'bafang_uart_motor_api',
     BafangUartProtocolDocument = 'bafang_uart_protocol',
-    BafangUartMotorAPIDocument = 'bafang_uart_motor_protocol',
+    YamahaGeneralManualDocument = 'yamaha_system_general_manual',
+    YamahaParamsDocument = 'yamaha_system_parameters',
+    YamahaDeviceAPIDocument = 'yamaha_system_api',
+    YamahaProtocolDocument = 'yamaha_system_protocol',
     TestPage = 'test_page',
 }
 
@@ -23,6 +27,10 @@ export function getDocumentById(id: string): string {
             return BafangUartMotorParameters;
         case DocPages.BafangUartMotorGeneralManualDocument:
             return GeneralManual;
+        case DocPages.YamahaGeneralManualDocument:
+        case DocPages.YamahaParamsDocument:
+        case DocPages.YamahaDeviceAPIDocument:
+        case DocPages.YamahaProtocolDocument:
         case DocPages.TestPage:
             return Test;
         default:
