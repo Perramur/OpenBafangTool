@@ -32,7 +32,7 @@ class YamahaSystemBatteryView extends React.Component<InfoProps, InfoState> {
             {
                 key: 'battery_temperature',
                 label: 'Battery temperature',
-                children: '0.0 C',
+                children: '0.0°C',
             },
             {
                 key: 'residual_capacity',

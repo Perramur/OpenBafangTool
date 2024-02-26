@@ -1,5 +1,7 @@
 ## General manual
 
+TODO update for multi-vendor
+
 #### Device selection view
 
 ![Device selection view screenshot](assets/general_manual/device_selection_view.png)

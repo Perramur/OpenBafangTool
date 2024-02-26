@@ -52,7 +52,7 @@ const menuItems = {
             label: 'Manual',
             children: [
                 {
-                    key: `manual_${DocPages.YamahaGeneralManualDocument}`,
+                    key: `manual_${DocPages.GeneralManualDocument}`,
                     label: 'General manual',
                 },
                 {
@@ -97,7 +97,7 @@ const menuItems = {
             label: 'Manual',
             children: [
                 {
-                    key: `manual_${DocPages.BafangUartMotorGeneralManualDocument}`,
+                    key: `manual_${DocPages.GeneralManualDocument}`,
                     label: 'General manual',
                 },
                 {
