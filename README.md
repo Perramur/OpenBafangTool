@@ -22,6 +22,18 @@
   </p>
 </div>
 
+<!-- RELEASE NOTES -->
+## Release Notes
+
+### 1.0.1
+
+- Published project in Beta
+- Added Simplified Mode for beginners
+
+### 1.0.0
+
+- Published first version in Alpha
+
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -29,7 +41,7 @@
 ![Screenshot](docs/assets/general_manual/main_view.png)
 ![Screenshot](docs/assets/general_manual/parameters_page.png)
 
-**Warning! This project in alpha version, so use it carefully. If you have any problems, write in [Issues](https://github.com/andrey-pr/OpenBafangTool/issues)**
+**Warning! This project in beta version, so use it carefully. If you have any problems, write in [Issues](https://github.com/andrey-pr/OpenBafangTool/issues)**
 
 **Please report about your expirience of using this program on [forum](https://endless-sphere.com/sphere/threads/openbafangtool-new-open-source-bafang-configuration-tool.122809) to help me make programm better**
 
@@ -52,11 +64,11 @@ Minimal set of hardware that you need to use this program (also possible to test
 
 Programming cable for bafang - you can buy it on Aliexpress for 5$ or in local shops.
 
-![Motor](docs/assets/readme/motor.jpeg)
+![Motor](docs/assets/readme/motor.avif)
 
 Motor that you want to configure.
 
-![USB isolator](docs/assets/readme/usb-isolator.webp)
+![USB isolator](docs/assets/readme/usb-isolator.jpg)
 
 Also better to have USB isolator, that will protect your computer in case when motor or connection cable is broken and put battery voltage (usually 36V or 48V) on USB connector.
 
@@ -82,17 +94,27 @@ There are docs on each parameter [here](docs/Bafang%20UART%20motor%20parameters.
 
 - [ ] Add support of Bafang motors with UART
   - [x] Find hardware
-  - [x] Alpha
-  - [ ] Beta
+  - [ ] Alpha
+  - [x] Beta
   - [ ] Stable
 - [ ] Add support of Yamaha systems
-  - [x] Find hardware
-  - [ ] Research protocol - in progress
+  - [ ] Find hardware
+  - [x] Research protocol - in progress
   - [ ] Alpha
   - [ ] Beta
   - [ ] Stable
 - [ ] Add support of Bafang systems with CAN
+  - [ ] Find hardware - in progress
+  - [ ] Alpha
+  - [ ] Beta
+  - [ ] Stable
 - [ ] Add support of Bafang displays with UART
+- [ ] Add support of Panasonic systems
+- [ ] Add more kinds of executables
+  - [x] .dmg - MacOS, on Apple Silicon and x86_64
+  - [ ] Flatpak - Linux, x86_64 - in progress
+- [ ] Add multi-language interface
+- [x] Add simple mode for beginners
 
 You can open [issue](https://github.com/andrey-pr/OpenBafangTool/issues) for request a new feature.
 

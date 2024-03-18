@@ -2,8 +2,8 @@ import React from 'react';
 import { Typography, Descriptions, FloatButton, message } from 'antd';
 import type { DescriptionsProps } from 'antd';
 import { SyncOutlined } from '@ant-design/icons';
-import BafangUartMotor from '../../../device/BafangUartMotor';
-import { BafangUartMotorInfo } from '../../../device/UartTypes';
+import BafangUartMotor from '../../../../device/BafangUartMotor';
+import { BafangUartMotorInfo } from '../../../../device/BafangUartMotorTypes';
 
 type InfoProps = {
     connection: BafangUartMotor;
@@ -45,11 +45,6 @@ class BafangUartMotorInfoView extends React.Component<InfoProps, InfoState> {
                 key: 'manufacturer',
                 label: 'Manufacturer',
                 children: info.manufacturer,
-            },
-            {
-                key: 'power_specification_code',
-                label: 'Power specification code',
-                children: info.power_specification_code,
             },
             {
                 key: 'system_code',
