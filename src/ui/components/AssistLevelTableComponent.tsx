@@ -57,6 +57,30 @@ class AssistLevelTableComponent extends React.Component<
         });
     }
 
+    updateCurrentLimitProfile = (e: number, record: AssistTableRow) => {
+        const { assist_profiles } = this.state;
+        assist_profiles[record.index] = {
+            current_limit: e,
+            speed_limit: assist_profiles[record.index].speed_limit,
+        };
+        this.setState({
+            assist_profiles,
+        });
+        this.props.onChange(assist_profiles);
+    };
+
+    updateSpeedLimitProfile(e: number, record: AssistTableRow) {
+        const { assist_profiles } = this.state;
+        assist_profiles[record.index] = {
+            current_limit: assist_profiles[record.index].current_limit,
+            speed_limit: e,
+        };
+        this.setState({
+            assist_profiles,
+        });
+        this.props.onChange(assist_profiles);
+    }
+
     render() {
         return (
             <Table
@@ -79,19 +103,9 @@ class AssistLevelTableComponent extends React.Component<
                             unit="%"
                             min={0}
                             max={100}
-                            onNewValue={(e) => {
-                                const { assist_profiles } = this.state;
-                                assist_profiles[record.index] = {
-                                    current_limit: e,
-                                    speed_limit:
-                                        assist_profiles[record.index]
-                                            .speed_limit,
-                                };
-                                this.setState({
-                                    assist_profiles,
-                                });
-                                this.props.onChange(assist_profiles);
-                            }}
+                            onNewValue={(e) =>
+                                this.updateCurrentLimitProfile(e, record)
+                            }
                             warningText={record.tip}
                             warningBelow={record.recommended_min}
                             warningAbove={record.recommended_max}
@@ -108,19 +122,9 @@ class AssistLevelTableComponent extends React.Component<
                             unit="%"
                             min={0}
                             max={100}
-                            onNewValue={(e) => {
-                                const { assist_profiles } = this.state;
-                                assist_profiles[record.index] = {
-                                    current_limit:
-                                        assist_profiles[record.index]
-                                            .current_limit,
-                                    speed_limit: e,
-                                };
-                                this.setState({
-                                    assist_profiles,
-                                });
-                                this.props.onChange(assist_profiles);
-                            }}
+                            onNewValue={(e) =>
+                                this.updateSpeedLimitProfile(e, record)
+                            }
                         />
                     )}
                 />

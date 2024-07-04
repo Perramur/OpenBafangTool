@@ -9,7 +9,7 @@ import BesstDevice from '../../besst/besst';
 export default class BafangBesstTool {
     private besstDevice?: BesstDevice;
 
-    public emitter: EventEmitter;
+    public emitter = new EventEmitter();
 
     private readingInProgress: boolean = false;
 
@@ -29,7 +29,6 @@ export default class BafangBesstTool {
         }
         this.demo = demo;
         this.besstDevice = besstDevice;
-        this.emitter = new EventEmitter();
         this.besstDevice?.emitter.on(
             'disconnection',
             () => (this.besstDevice = undefined),

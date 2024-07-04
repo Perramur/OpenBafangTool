@@ -24,7 +24,7 @@ export function listBesstDevices(): HID.Device[] {
 class BesstDevice {
     private device?: HID.HID;
 
-    public readonly emitter: EventEmitter;
+    public readonly emitter = new EventEmitter();
 
     private serialNumberPromise?: PromiseControls = undefined;
 
@@ -47,6 +47,10 @@ class BesstDevice {
         } else {
             this.device = new HID.HID(vid as number, pid as number);
         }
+        this.initialization();
+    }
+
+    private initialization() {
         this.processReadedData = this.processReadedData.bind(this);
         this.processWriteQueue = this.processWriteQueue.bind(this);
         this.processCanFrame = this.processCanFrame.bind(this);
@@ -58,15 +62,9 @@ class BesstDevice {
         this.onDisconnect = this.onDisconnect.bind(this);
         this.disconnect = this.disconnect.bind(this);
         this.reset = this.reset.bind(this);
-        this.emitter = new EventEmitter();
         this.device?.addListener('data', this.processReadedData);
         this.device?.addListener('error', this.onDisconnect);
         setTimeout(this.processWriteQueue, 100);
-    }
-
-    onDisconnect() {
-        this.disconnect();
-        this.emitter.emit('disconnection');
     }
 
     private processWriteQueue(): void {
@@ -261,16 +259,14 @@ class BesstDevice {
     }
 
     public reset(): Promise<void> {
-        let pid = 0;
-        let vid = 0;
-        try {
-            vid = this.device?.getDeviceInfo().vendorId;
-            pid = this.device?.getDeviceInfo().productId;
-            this.device?.removeAllListeners();
-        } catch (e) {
+        if (!this.device) {
             this.onDisconnect();
             return new Promise<void>(() => {});
         }
+        const { vendorId: vid, productId: pid } = this.device.getDeviceInfo();
+
+        this.device.removeAllListeners();
+
         this.packetQueue = [];
         this.packetQueue.push(
             generateBesstWritePacket(BesstPacketType.BESST_RESET, [0, 0, 0, 0]),
@@ -345,6 +341,11 @@ class BesstDevice {
                 ),
             );
         });
+    }
+
+    public onDisconnect() {
+        this.disconnect();
+        this.emitter.emit('disconnection');
     }
 
     public disconnect(): void {

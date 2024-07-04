@@ -1,15 +1,15 @@
 import { deepCopy } from 'deep-copy-ts';
 import {
-    BafangCanDisplayData1,
-    BafangCanDisplayData2,
+    BafangCanDisplayMileageData,
+    BafangCanDisplaySpeedAndServiceData,
     BafangCanDisplayRealtimeData,
 } from '../../../types/BafangCanSystemTypes';
 import { charsToString, validateTime } from '../../../utils/utils';
 import {
     getDisplayBVDemo,
     getDisplayCNDemo,
-    getDisplayDemoData1,
-    getDisplayDemoData2,
+    getDisplayDemoMileageData,
+    getDisplayDemoSpeedAndServiceData,
     getDisplayErrorCodesDemo,
     getDisplayHVDemo,
     getDisplayMNDemo,
@@ -45,7 +45,7 @@ export default class BafangCanDisplay {
 
     private requestManager?: RequestManager;
 
-    public emitter: EventEmitter;
+    public emitter = new EventEmitter();
 
     private readingInProgress: boolean = false;
 
@@ -53,9 +53,9 @@ export default class BafangCanDisplay {
 
     private demo: boolean;
 
-    private _data1: BafangCanDisplayData1 | null = null;
+    private _bafangMileageData: BafangCanDisplayMileageData | null = null;
 
-    private _data2: BafangCanDisplayData2 | null = null;
+    private _bafangSpeedAndServiceData: BafangCanDisplaySpeedAndServiceData | null = null;
 
     private realtime_data: BafangCanDisplayRealtimeData | null = null;
 
@@ -81,8 +81,8 @@ export default class BafangCanDisplay {
         requestManager?: RequestManager,
     ) {
         if (demo) {
-            this._data1 = getDisplayDemoData1();
-            this._data2 = getDisplayDemoData2();
+            this._bafangMileageData = getDisplayDemoMileageData();
+            this._bafangSpeedAndServiceData = getDisplayDemoSpeedAndServiceData();
             this.realtime_data = getDisplayRealtimeDemoData();
             this._errorCodes = getDisplayErrorCodesDemo();
             this.serial_number = getDisplaySNDemo();
@@ -98,7 +98,6 @@ export default class BafangCanDisplay {
         this.demo = demo;
         this.besstDevice = besstDevice;
         this.requestManager = requestManager;
-        this.emitter = new EventEmitter();
         this.besstDevice?.emitter.on('can', this.processParsedCanResponse);
         this.besstDevice?.emitter.on(
             'disconnection',
@@ -179,8 +178,8 @@ export default class BafangCanDisplay {
                         rereadParameter(response, this.besstDevice);
                         break;
                     }
-                    this._data1 = BafangCanDisplayParser.package1(response);
-                    this.emitter.emit('data-1', deepCopy(this._data1));
+                    this._bafangMileageData = BafangCanDisplayParser.package1(response);
+                    this.emitter.emit('data-1', deepCopy(this._bafangMileageData));
                     break;
                 case 0x02:
                     log.info('received can package:', response);
@@ -188,8 +187,8 @@ export default class BafangCanDisplay {
                         rereadParameter(response, this.besstDevice);
                         break;
                     }
-                    this._data2 = BafangCanDisplayParser.package2(response);
-                    this.emitter.emit('data-2', deepCopy(this._data2));
+                    this._bafangSpeedAndServiceData = BafangCanDisplayParser.package2(response);
+                    this.emitter.emit('data-2', deepCopy(this._bafangSpeedAndServiceData));
                     break;
                 default:
                     break;
@@ -201,8 +200,8 @@ export default class BafangCanDisplay {
         if (this.demo) {
             setTimeout(() => {
                 this.emitter.emit('data-0', deepCopy(this.realtimeData));
-                this.emitter.emit('data-1', deepCopy(this._data1));
-                this.emitter.emit('data-2', deepCopy(this._data2));
+                this.emitter.emit('data-1', deepCopy(this._bafangMileageData));
+                this.emitter.emit('data-2', deepCopy(this._bafangSpeedAndServiceData));
                 this.emitter.emit('data-ec', deepCopy(this._errorCodes));
                 this.emitter.emit('data-hv', this.hardware_version);
                 this.emitter.emit('data-sv', this.software_version);
@@ -294,14 +293,14 @@ export default class BafangCanDisplay {
             this.requestManager,
         );
         prepareTotalMileageWritePromise(
-            this._data1?.total_mileage,
+            this._bafangMileageData?.total_mileage,
             writePromises,
             writeShortParameter,
             this.besstDevice,
             this.requestManager,
         );
         prepareSingleMileageWritePromise(
-            this._data1?.single_mileage,
+            this._bafangMileageData?.single_mileage,
             writePromises,
             writeShortParameter,
             this.besstDevice,
@@ -373,24 +372,24 @@ export default class BafangCanDisplay {
         return this.device_available;
     }
 
-    public get data1(): BafangCanDisplayData1 | null {
-        return deepCopy(this._data1);
+    public get bafangMileageData(): BafangCanDisplayMileageData | null {
+        return deepCopy(this._bafangMileageData);
     }
 
     public set totalMileage(data: number) {
-        if (this._data1) {
-            this._data1.total_mileage = deepCopy(data);
+        if (this._bafangMileageData) {
+            this._bafangMileageData.total_mileage = deepCopy(data);
         }
     }
 
     public set singleMileage(data: number) {
-        if (this._data1) {
-            this._data1.single_mileage = deepCopy(data);
+        if (this._bafangMileageData) {
+            this._bafangMileageData.single_mileage = deepCopy(data);
         }
     }
 
-    public get data2(): BafangCanDisplayData2 | null {
-        return deepCopy(this._data2);
+    public get bafangSpeedAndServiceData(): BafangCanDisplaySpeedAndServiceData | null {
+        return deepCopy(this._bafangSpeedAndServiceData);
     }
 
     public get realtimeData(): BafangCanDisplayRealtimeData | null {

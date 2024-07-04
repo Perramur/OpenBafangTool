@@ -18,7 +18,7 @@ export default class BafangCanSystem implements IConnection {
 
     private device?: BesstDevice;
 
-    public emitter: EventEmitter;
+    public emitter = new EventEmitter();
 
     private _controller: BafangCanController | null = null;
 
@@ -36,7 +36,6 @@ export default class BafangCanSystem implements IConnection {
 
     constructor(devicePath: string) {
         this.devicePath = devicePath;
-        this.emitter = new EventEmitter();
         this.loadData = this.loadData.bind(this);
         this.disconnect = this.disconnect.bind(this);
         this.onDisconnect = this.onDisconnect.bind(this);

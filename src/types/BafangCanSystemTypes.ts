@@ -115,13 +115,13 @@ export type BafangCanControllerSpeedParameters = {
     circumference: number;
 };
 
-export type BafangCanDisplayData1 = {
+export type BafangCanDisplayMileageData = {
     total_mileage: number;
     single_mileage: number;
     max_speed: number;
 };
 
-export type BafangCanDisplayData2 = {
+export type BafangCanDisplaySpeedAndServiceData = {
     average_speed: number;
     service_mileage: number;
 };

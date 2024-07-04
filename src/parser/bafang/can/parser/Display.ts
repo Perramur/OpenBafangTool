@@ -1,8 +1,8 @@
 import { BesstReadedCanFrame } from '../../../../device/besst/besst-types';
 import {
     AssistLevel,
-    BafangCanDisplayData1,
-    BafangCanDisplayData2,
+    BafangCanDisplayMileageData,
+    BafangCanDisplaySpeedAndServiceData,
     BafangCanDisplayRealtimeData,
     BafangCanRideMode,
 } from '../../../../types/BafangCanSystemTypes';
@@ -72,7 +72,7 @@ export class BafangCanDisplayParser {
         };
     }
 
-    public static package1(packet: BesstReadedCanFrame): BafangCanDisplayData1 {
+    public static package1(packet: BesstReadedCanFrame): BafangCanDisplayMileageData {
         return {
             total_mileage:
                 (packet.data[2] << 16) + (packet.data[1] << 8) + packet.data[0],
@@ -85,7 +85,7 @@ export class BafangCanDisplayParser {
         };
     }
 
-    public static package2(packet: BesstReadedCanFrame): BafangCanDisplayData2 {
+    public static package2(packet: BesstReadedCanFrame): BafangCanDisplaySpeedAndServiceData {
         return {
             average_speed: ((packet.data[1] << 8) + packet.data[0]) / 10,
             service_mileage:

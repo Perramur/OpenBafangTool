@@ -5,8 +5,8 @@ import {
     BafangCanControllerRealtime0,
     BafangCanControllerRealtime1,
     BafangCanControllerSpeedParameters,
-    BafangCanDisplayData1,
-    BafangCanDisplayData2,
+    BafangCanDisplayMileageData,
+    BafangCanDisplaySpeedAndServiceData,
     BafangCanDisplayRealtimeData,
     MotorType,
     PedalSensorType,
@@ -198,7 +198,7 @@ export function getControllerSpeedParametersDemo(): BafangCanControllerSpeedPara
     };
 }
 
-export function getDisplayDemoData1(): BafangCanDisplayData1 {
+export function getDisplayDemoMileageData(): BafangCanDisplayMileageData {
     return {
         total_mileage: 10000,
         single_mileage: 1000,
@@ -206,7 +206,7 @@ export function getDisplayDemoData1(): BafangCanDisplayData1 {
     };
 }
 
-export function getDisplayDemoData2(): BafangCanDisplayData2 {
+export function getDisplayDemoSpeedAndServiceData(): BafangCanDisplaySpeedAndServiceData {
     return {
         average_speed: 0,
         service_mileage: 0,

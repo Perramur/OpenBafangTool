@@ -27,7 +27,7 @@ export default class BafangCanBattery {
 
     private requestManager?: RequestManager;
 
-    public emitter: EventEmitter;
+    public emitter = new EventEmitter();
 
     private readingInProgress: boolean = false;
 
@@ -68,7 +68,6 @@ export default class BafangCanBattery {
         this.demo = demo;
         this.besstDevice = besstDevice;
         this.requestManager = requestManager;
-        this.emitter = new EventEmitter();
         this.besstDevice?.emitter.on('can', this.processParsedCanResponse);
         this.besstDevice?.emitter.on(
             'disconnection',

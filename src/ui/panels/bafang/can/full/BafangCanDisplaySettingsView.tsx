@@ -22,8 +22,8 @@ import {
 } from '../../../../utils/UIUtils';
 import BafangCanSystem from '../../../../../device/high-level/BafangCanSystem';
 import {
-    BafangCanDisplayData1,
-    BafangCanDisplayData2,
+    BafangCanDisplayMileageData,
+    BafangCanDisplaySpeedAndServiceData,
     BafangCanDisplayRealtimeData,
 } from '../../../../../types/BafangCanSystemTypes';
 import { getErrorCodeText } from '../../../../../constants/BafangCanConstants';
@@ -38,8 +38,8 @@ type SettingsProps = {
 };
 
 type SettingsState = {
-    data1: BafangCanDisplayData1 | null;
-    data2: BafangCanDisplayData2 | null;
+    bafangMileageData: BafangCanDisplayMileageData | null;
+    bafangSpeedAndServiceData: BafangCanDisplaySpeedAndServiceData | null;
     realtime_data: BafangCanDisplayRealtimeData | null;
     error_codes: number[] | null;
     hardware_version: string | null;
@@ -81,8 +81,8 @@ class BafangCanDisplaySettingsView extends React.Component<
         super(props);
         const { connection } = this.props;
         this.state = {
-            data1: connection.display.data1,
-            data2: connection.display.data2,
+            bafangMileageData: connection.display.bafangMileageData,
+            bafangSpeedAndServiceData: connection.display.bafangSpeedAndServiceData,
             realtime_data: connection.display.realtimeData,
             error_codes: connection.display.errorCodes,
             hardware_version: connection.display.hardwareVersion,
@@ -106,11 +106,11 @@ class BafangCanDisplaySettingsView extends React.Component<
         );
         connection.display.emitter.on(
             'data-1',
-            (data1: BafangCanDisplayData1) => this.setState({ data1 }),
+            (bafangMileageData: BafangCanDisplayMileageData) => this.setState({ bafangMileageData }),
         );
         connection.display.emitter.on(
             'data-2',
-            (data2: BafangCanDisplayData2) => this.setState({ data2 }),
+            (bafangSpeedAndServiceData: BafangCanDisplaySpeedAndServiceData) => this.setState({ bafangSpeedAndServiceData }),
         );
         connection.display.emitter.on('data-ec', (error_codes: number[]) =>
             this.setState({ error_codes }),
@@ -139,20 +139,20 @@ class BafangCanDisplaySettingsView extends React.Component<
     }
 
     getRecordsItems(): DescriptionsProps['items'] {
-        const { data1, data2 } = this.state;
+        const { bafangMileageData, bafangSpeedAndServiceData } = this.state;
         let items: DescriptionsProps['items'] = [];
-        if (data1) {
+        if (bafangMileageData) {
             items = [
                 ...items,
                 generateEditableNumberListItem(
                     'Total mileage',
-                    data1.total_mileage,
+                    bafangMileageData.total_mileage,
                     (e) => {
-                        const { data1 } = this.state;
-                        if (!data1) return;
-                        data1.total_mileage = e;
+                        const { bafangMileageData } = this.state;
+                        if (!bafangMileageData) return;
+                        bafangMileageData.total_mileage = e;
                         this.setState({
-                            data1,
+                            bafangMileageData: bafangMileageData,
                         });
                     },
                     'Km',
@@ -161,22 +161,22 @@ class BafangCanDisplaySettingsView extends React.Component<
                 ),
                 generateEditableNumberListItem(
                     'Single trip mileage',
-                    data1.single_mileage,
+                    bafangMileageData.single_mileage,
                     (e) => {
-                        const { data1 } = this.state;
-                        if (!data1) return;
-                        data1.single_mileage = e;
+                        const { bafangMileageData } = this.state;
+                        if (!bafangMileageData) return;
+                        bafangMileageData.single_mileage = e;
                         this.setState({
-                            data1,
+                            bafangMileageData: bafangMileageData,
                         });
                     },
                     'Km',
                     0,
-                    (data1.total_mileage as number) + 1,
+                    (bafangMileageData.total_mileage as number) + 1,
                 ),
                 generateSimpleNumberListItem(
                     'Max registered speed',
-                    data1.max_speed,
+                    bafangMileageData.max_speed,
                     'Km/H',
                 ),
             ];
@@ -197,12 +197,12 @@ class BafangCanDisplaySettingsView extends React.Component<
                 ),
             ];
         }
-        if (data2) {
+        if (bafangSpeedAndServiceData) {
             items = [
                 ...items,
                 generateSimpleNumberListItem(
                     'Average speed',
-                    data2.average_speed,
+                    bafangSpeedAndServiceData.average_speed,
                     'Km/H',
                 ),
                 {
@@ -211,7 +211,7 @@ class BafangCanDisplaySettingsView extends React.Component<
                     children: (
                         <>
                             <NumberValueComponent
-                                value={data2.service_mileage}
+                                value={bafangSpeedAndServiceData.service_mileage}
                                 unit="Km"
                             />
                             <br />
@@ -443,9 +443,9 @@ class BafangCanDisplaySettingsView extends React.Component<
         if (this.writingInProgress) return;
         this.writingInProgress = true;
         const { connection } = this.props;
-        if (this.state.data1) {
-            connection.display.totalMileage = this.state.data1.total_mileage;
-            connection.display.singleMileage = this.state.data1.single_mileage;
+        if (this.state.bafangMileageData) {
+            connection.display.totalMileage = this.state.bafangMileageData.total_mileage;
+            connection.display.singleMileage = this.state.bafangMileageData.single_mileage;
         }
         connection.display.customerNumber = this.state.customer_number;
         connection.display.manufacturer = this.state.manufacturer;
@@ -467,6 +467,26 @@ class BafangCanDisplaySettingsView extends React.Component<
                 });
                 this.writingInProgress = false;
             },
+        );
+    }
+
+    updateOtherSetting(connection: BafangCanSystem) {
+        connection.display.loadData();
+        message.open({
+            key: 'loading',
+            type: 'loading',
+            content: 'Loading...',
+            duration: 60,
+        });
+        connection.display.emitter.once(
+            'read-finish',
+            (readedSuccessfully, readededUnsuccessfully) =>
+                message.open({
+                    key: 'loading',
+                    type: 'info',
+                    content: `Loaded ${readedSuccessfully} parameters succesfully, ${readededUnsuccessfully} not succesfully`,
+                    duration: 5,
+                }),
         );
     }
 
@@ -542,25 +562,7 @@ class BafangCanDisplaySettingsView extends React.Component<
                     icon={<SyncOutlined />}
                     type="primary"
                     style={{ right: 94 }}
-                    onClick={() => {
-                        connection.display.loadData();
-                        message.open({
-                            key: 'loading',
-                            type: 'loading',
-                            content: 'Loading...',
-                            duration: 60,
-                        });
-                        connection.display.emitter.once(
-                            'read-finish',
-                            (readedSuccessfully, readededUnsuccessfully) =>
-                                message.open({
-                                    key: 'loading',
-                                    type: 'info',
-                                    content: `Loaded ${readedSuccessfully} parameters succesfully, ${readededUnsuccessfully} not succesfully`,
-                                    duration: 5,
-                                }),
-                        );
-                    }}
+                    onClick={() => this.updateOtherSetting(connection)}
                 />
                 <Popconfirm
                     title="Parameter writing"

@@ -6,8 +6,8 @@ import BafangCanSystem from '../../../../../device/high-level/BafangCanSystem';
 import {
     BafangCanControllerRealtime0,
     BafangCanControllerRealtime1,
-    BafangCanDisplayData1,
-    BafangCanDisplayData2,
+    BafangCanDisplayMileageData,
+    BafangCanDisplaySpeedAndServiceData,
     BafangCanDisplayRealtimeData,
     BafangCanSensorRealtime,
 } from '../../../../../types/BafangCanSystemTypes';
@@ -32,8 +32,8 @@ type InfoState = {
     controller_serial_number: string | null;
     controller_manufacturer: string | null;
     display_realtime: BafangCanDisplayRealtimeData | null;
-    display_data1: BafangCanDisplayData1 | null;
-    display_data2: BafangCanDisplayData2 | null;
+    display_dataMileageData: BafangCanDisplayMileageData | null;
+    display_speedAndServiceData: BafangCanDisplaySpeedAndServiceData | null;
     display_hardware_version: string | null;
     display_software_version: string | null;
     display_model_number: string | null;
@@ -66,8 +66,8 @@ class BafangCanSystemInfoView extends React.Component<InfoProps, InfoState> {
             controller_manufacturer: connection.controller.manufacturer,
             display_realtime: connection.display.realtimeData,
             sensor_realtime: connection.sensor.realtimeData,
-            display_data1: connection.display.data1,
-            display_data2: connection.display.data2,
+            display_dataMileageData: connection.display.bafangMileageData,
+            display_speedAndServiceData: connection.display.bafangSpeedAndServiceData,
             display_hardware_version: connection.display.hardwareVersion,
             display_software_version: connection.display.softwareVersion,
             display_model_number: connection.display.modelNumber,
@@ -127,13 +127,13 @@ class BafangCanSystemInfoView extends React.Component<InfoProps, InfoState> {
         );
         connection.display.emitter.on(
             'data-1',
-            (display_data1: BafangCanDisplayData1) =>
-                this.setState({ display_data1 }),
+            (bafangMileageData: BafangCanDisplayMileageData) =>
+                this.setState({ display_dataMileageData: bafangMileageData }),
         );
         connection.display.emitter.on(
             'data-2',
-            (display_data2: BafangCanDisplayData2) =>
-                this.setState({ display_data2 }),
+            (display_data2: BafangCanDisplaySpeedAndServiceData) =>
+                this.setState({ display_speedAndServiceData: display_data2 }),
         );
         connection.display.emitter.on(
             'data-hv',
@@ -389,23 +389,23 @@ class BafangCanSystemInfoView extends React.Component<InfoProps, InfoState> {
                 generateSimpleStringListItem('Button', 'Not available yet'),
             ];
         }
-        if (this.state.display_data1) {
-            const { display_data1 } = this.state;
+        if (this.state.display_dataMileageData) {
+            const { display_dataMileageData } = this.state;
             items = [
                 ...items,
                 generateSimpleNumberListItem(
                     'Total mileage',
-                    display_data1.total_mileage,
+                    display_dataMileageData.total_mileage,
                     'Km',
                 ),
                 generateSimpleNumberListItem(
                     'Single mileage',
-                    display_data1.single_mileage,
+                    display_dataMileageData.single_mileage,
                     'Km',
                 ),
                 generateSimpleNumberListItem(
                     'Max registered speed',
-                    display_data1.max_speed,
+                    display_dataMileageData.max_speed,
                     'Km/H',
                 ),
             ];
@@ -426,18 +426,18 @@ class BafangCanSystemInfoView extends React.Component<InfoProps, InfoState> {
                 ),
             ];
         }
-        if (this.state.display_data2) {
-            const { display_data2 } = this.state;
+        if (this.state.display_speedAndServiceData) {
+            const { display_speedAndServiceData } = this.state;
             items = [
                 ...items,
                 generateSimpleNumberListItem(
                     'Average speed',
-                    display_data2.average_speed,
+                    display_speedAndServiceData.average_speed,
                     'Km/H',
                 ),
                 generateSimpleNumberListItem(
                     'Mileage since last service',
-                    display_data2.service_mileage,
+                    display_speedAndServiceData.service_mileage,
                     'Km',
                 ),
             ];

@@ -40,7 +40,7 @@ export default class BafangUartMotor implements IConnection {
 
     readonly deviceName: DeviceName = DeviceName.BafangUartMotor;
 
-    public emitter: EventEmitter;
+    public emitter = new EventEmitter();
 
     private portBuffer: Uint8Array = new Uint8Array();
 
@@ -94,7 +94,6 @@ export default class BafangUartMotor implements IConnection {
             throttle_speed_limit: 0,
             throttle_start_current: 0,
         };
-        this.emitter = new EventEmitter();
         this.loadData = this.loadData.bind(this);
     }
 
@@ -487,7 +486,7 @@ export default class BafangUartMotor implements IConnection {
         const port = this.port;
         function sendRequest(i: number): void {
             log.info('Sent write package: ', request[i]);
-            writeToPort(port, Buffer.from(request[i])).then();
+            writeToPort(port, Buffer.from(request[i]));
             if (i !== request.length - 1) {
                 setTimeout(sendRequest, 300, i + 1);
             }
